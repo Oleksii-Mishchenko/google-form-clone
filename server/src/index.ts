@@ -1,7 +1,7 @@
 import { createServer } from 'node:http';
 import { createYoga, createSchema } from 'graphql-yoga';
 
-const typeDefs = /* GraphQL */ `
+const typeDefs = `
   type Query {
     hello: String!
   }
