@@ -25,20 +25,17 @@ Create a simplified clone of Google Forms with core functionality for form creat
 
 - **GraphQL API:** Implement a basic GraphQL server.
 - **Schema Definition:** Define GraphQL types and queries/mutations for the following types:
-
   - **`Form`:** (with list of questions)
   - **`Question`:** (should support types like `TEXT`, `MULTIPLE_CHOICE`, `CHECKBOX`, `DATE`)
   - **`Response`:** (with form ID, and list of answers)
   - **`Answer`:** (answer to specific question)
 
 - **Queries:**
-
   - `forms`: Returns a list of all created forms.
   - `form(id: ID!): Form`: Returns a single form by its ID.
   - `responses(formId: ID!): [Response!]`: Returns all responses for a given form ID.
 
 - **Mutations:**
-
   - `createForm(title: String!, description: String, questions: [QuestionInput]): Form`: Creates a new form.
   - `submitResponse(formId: ID!, answers: [AnswerInput]): Response`: Submits a new response for a form.
 
@@ -52,7 +49,6 @@ Create a simplified clone of Google Forms with core functionality for form creat
   - State for responses.
   - Utilize **RTK Query** for simplified data fetching and caching from the GraphQL API. please, consider using [code generation](https://redux-toolkit.js.org/rtk-query/usage/code-generation)
 - **Pages/Routes:**
-
   - **Homepage (`/`):**
     - Displays a list of all created forms (Form Title, description).
     - Each form should have a link to "View Form" (for filling out) and "View Responses".

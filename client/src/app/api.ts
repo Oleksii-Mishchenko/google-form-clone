@@ -1,5 +1,5 @@
 import { createApi, type BaseQueryFn } from '@reduxjs/toolkit/query/react';
-import { request, ClientError } from 'graphql-request'
+import { request, ClientError } from 'graphql-request';
 
 const graphqlBaseQuery =
   (): BaseQueryFn<
@@ -12,14 +12,14 @@ const graphqlBaseQuery =
       const result = await request(
         'http://localhost:4000/graphql',
         document,
-        variables
-      )
-      return { data: result }
+        variables,
+      );
+      return { data: result };
     } catch (error) {
       if (error instanceof ClientError) {
-        return { error: error.response.errors }
+        return { error: error.response.errors };
       }
-      return { error: 'Unknown error' }
+      return { error: 'Unknown error' };
     }
   };
 
