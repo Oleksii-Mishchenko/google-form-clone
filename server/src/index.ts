@@ -8,6 +8,7 @@ const yoga = createYoga({
     typeDefs,
     resolvers,
   }),
+  maskedErrors: false,
 });
 
 const server = createServer(yoga);

@@ -11,6 +11,7 @@ export const typeDefs = `
     title: String!
     type: QuestionType!
     options: [String!]
+    required: Boolean!
   }
 
   type Form {
@@ -35,6 +36,7 @@ export const typeDefs = `
     title: String!
     type: QuestionType!
     options: [String!]
+    required: Boolean!
   }
 
   input AnswerInput {

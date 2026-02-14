@@ -5,6 +5,7 @@ export interface Question {
   title: string;
   type: QuestionType;
   options?: string[];
+  required: boolean;
 }
 
 export interface Form {

@@ -27,16 +27,61 @@ export const api = createApi({
   reducerPath: 'api',
   baseQuery: graphqlBaseQuery(),
   endpoints: (builder) => ({
-    hello: builder.query<{ hello: string }, void>({
+    getForms: builder.query<
+      { forms: { id: string; title: string; description?: string }[] },
+      void
+    >({
       query: () => ({
         document: `
           query {
-            hello
+            forms {
+              id
+              title
+              description
+            }
           }
         `,
+      }),
+    }),
+
+    getForm: builder.query<
+      {
+        form: {
+          id: string;
+          title: string;
+          description?: string;
+          questions: {
+            id: string;
+            title: string;
+            type: string;
+            options?: string[];
+            required: boolean;
+          }[];
+        };
+      },
+      string
+    >({
+      query: (id) => ({
+        document: `
+          query ($id: ID!) {
+            form(id: $id) {
+              id
+              title
+              description
+              questions {
+                id
+                title
+                type
+                options
+                required
+              }
+            }
+          }
+        `,
+        variables: { id },
       }),
     }),
   }),
 });
 
-export const { useHelloQuery } = api;
+export const { useGetFormsQuery, useGetFormQuery } = api;
