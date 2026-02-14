@@ -49,7 +49,7 @@ const FormBuilderPage = () => {
           {questions.map((q) => (
             <div
               key={q.id}
-              className="bg-surface border border-border rounded-xl p-5"
+              className="bg-surface border border-border rounded-xl p-5 space-y-4"
             >
               <input
                 type="text"
@@ -66,6 +66,46 @@ const FormBuilderPage = () => {
                 }
                 className="w-full bg-surface border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
               />
+
+              <select
+                value={q.type}
+                onChange={(e) =>
+                  setQuestions((prev) =>
+                    prev.map((question) =>
+                      question.id === q.id
+                        ? {
+                            ...question,
+                            type: e.target.value as QuestionDraft['type'],
+                          }
+                        : question,
+                    ),
+                  )
+                }
+                className="w-full bg-surface border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+              >
+                <option value="TEXT">Text</option>
+                <option value="DATE">Date</option>
+                <option value="MULTIPLE_CHOICE">Multiple Choice</option>
+                <option value="CHECKBOX">Checkbox</option>
+              </select>
+
+              <label className="flex items-center gap-2 text-sm text-text-secondary">
+                <input
+                  type="checkbox"
+                  checked={q.required}
+                  onChange={(e) =>
+                    setQuestions((prev) =>
+                      prev.map((question) =>
+                        question.id === q.id
+                          ? { ...question, required: e.target.checked }
+                          : question,
+                      ),
+                    )
+                  }
+                  className="accent-primary"
+                />
+                Required
+              </label>
             </div>
           ))}
         </div>

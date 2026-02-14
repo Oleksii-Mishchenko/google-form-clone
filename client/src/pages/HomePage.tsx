@@ -1,91 +1,70 @@
-import { useState } from "react";
+import { Link } from 'react-router-dom';
+import { useGetFormsQuery } from '../app/api';
 
-type QuestionDraft = {
-  id: string;
-  title: string;
-  type: 'TEXT' | 'MULTIPLE_CHOICE' | 'CHECKBOX' | 'DATE';
-  options: string[];
-  required: boolean;
-};
+const HomePage = () => {
+  const { data, isLoading, error } = useGetFormsQuery();
 
-const FormBuilderPage = () => {
-  const [title, setTitle] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
-  const [questions, setQuestions] = useState<QuestionDraft[]>([]);
+  if (isLoading) {
+    return <div className="p-8 text-text-secondary">Loading...</div>;
+  }
 
-  const handleAddQuestion = () => {
-    const newQuestion: QuestionDraft = {
-      id: crypto.randomUUID(),
-      title: '',
-      type: 'TEXT',
-      options: [],
-      required: false,
-    };
-
-    setQuestions((prev) => [...prev, newQuestion]);
-  };
+  if (error) {
+    return <div className="p-8 text-danger">Error loading forms</div>;
+  }
 
   return (
-    <form className="flex flex-col space-y-3">
-      <div className="flex flex-col space-y-2">
-        <label>
-          <input
-            type="text"
-            name="title"
-            className="border border-black"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </label>
+    <div className="p-8 max-w-4xl mx-auto space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-semibold">Forms</h1>
 
-        <label>
-          <textarea
-            name="description"
-            className="border border-black"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </label>
-
-        <button
-          type="button"
-          onClick={handleAddQuestion}
-          className="border border-black"
+        <Link
+          to="/forms/new"
+          className="bg-primary hover:bg-primary-hover transition-colors text-white px-5 py-2.5 rounded-xl shadow-md"
         >
-          Add Question
-        </button>
-
-        <div className="space-y-3">
-          {questions.map((q) => (
-            <div key={q.id} className="border p-3">
-              <input
-                type="text"
-                value={q.title}
-                onChange={(e) =>
-                  setQuestions((prev) =>
-                    prev.map((question) =>
-                      question.id === q.id
-                        ? { ...question, title: e.target.value }
-                        : question
-                    )
-                  )
-                }
-                className="border border-black w-full"
-              />
-            </div>
-          ))}
-        </div>
-
+          Create New Form
+        </Link>
       </div>
 
-      <button
-        type="submit"
-        className="border border-black"
-      >
-        Save Form
-      </button>
-    </form>
+      <div className="space-y-4">
+        {data?.forms.length === 0 && (
+          <div className="text-text-secondary">No forms created yet.</div>
+        )}
+
+        {data?.forms.map((form) => (
+          <div
+            key={form.id}
+            className="bg-surface border border-border rounded-xl p-5 flex justify-between items-center hover:bg-surface-hover transition-colors"
+          >
+            <div>
+              <h2 className="text-lg font-medium">{form.title}</h2>
+
+              {form.description && (
+                <p className="text-sm text-text-secondary mt-1">
+                  {form.description}
+                </p>
+              )}
+            </div>
+
+            <div className="flex gap-4 text-sm">
+              <Link
+                to={`/forms/${form.id}/fill`}
+                className="text-primary hover:underline"
+              >
+                Fill
+              </Link>
+
+              <Link
+                to={`/forms/${form.id}/responses`}
+                className="text-success hover:underline"
+              >
+                Responses
+              </Link>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 
-export default FormBuilderPage;
+export default HomePage;
