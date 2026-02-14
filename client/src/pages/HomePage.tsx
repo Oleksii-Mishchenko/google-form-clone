@@ -1,58 +1,91 @@
-import { Link } from 'react-router-dom';
-import { useGetFormsQuery } from '../app/api';
+import { useState } from "react";
 
-const HomePage = () => {
-  const { data, isLoading, error } = useGetFormsQuery();
+type QuestionDraft = {
+  id: string;
+  title: string;
+  type: 'TEXT' | 'MULTIPLE_CHOICE' | 'CHECKBOX' | 'DATE';
+  options: string[];
+  required: boolean;
+};
 
-  if (isLoading) return <div className="p-6">Loading...</div>;
-  if (error) return <div className="p-6 text-red-500">Error loading forms</div>;
+const FormBuilderPage = () => {
+  const [title, setTitle] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [questions, setQuestions] = useState<QuestionDraft[]>([]);
+
+  const handleAddQuestion = () => {
+    const newQuestion: QuestionDraft = {
+      id: crypto.randomUUID(),
+      title: '',
+      type: 'TEXT',
+      options: [],
+      required: false,
+    };
+
+    setQuestions((prev) => [...prev, newQuestion]);
+  };
 
   return (
-    <div className="p-6 space-y-4">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Forms</h1>
-        <Link
-          to="/forms/new"
-          className="bg-blue-600 text-white px-4 py-2 rounded"
+    <form className="flex flex-col space-y-3">
+      <div className="flex flex-col space-y-2">
+        <label>
+          <input
+            type="text"
+            name="title"
+            className="border border-black"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </label>
+
+        <label>
+          <textarea
+            name="description"
+            className="border border-black"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </label>
+
+        <button
+          type="button"
+          onClick={handleAddQuestion}
+          className="border border-black"
         >
-          Create New Form
-        </Link>
+          Add Question
+        </button>
+
+        <div className="space-y-3">
+          {questions.map((q) => (
+            <div key={q.id} className="border p-3">
+              <input
+                type="text"
+                value={q.title}
+                onChange={(e) =>
+                  setQuestions((prev) =>
+                    prev.map((question) =>
+                      question.id === q.id
+                        ? { ...question, title: e.target.value }
+                        : question
+                    )
+                  )
+                }
+                className="border border-black w-full"
+              />
+            </div>
+          ))}
+        </div>
+
       </div>
 
-      <div className="space-y-3">
-        {data?.forms.map((form) => (
-          <div
-            key={form.id}
-            className="border p-4 rounded flex justify-between items-center"
-          >
-            <div>
-              <h2 className="font-semibold">{form.title}</h2>
-              {form.description && (
-                <p className="text-sm text-gray-500">
-                  {form.description}
-                </p>
-              )}
-            </div>
-
-            <div className="space-x-2">
-              <Link
-                to={`/forms/${form.id}/fill`}
-                className="text-blue-600"
-              >
-                Fill
-              </Link>
-              <Link
-                to={`/forms/${form.id}/responses`}
-                className="text-green-600"
-              >
-                Responses
-              </Link>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+      <button
+        type="submit"
+        className="border border-black"
+      >
+        Save Form
+      </button>
+    </form>
   );
 };
 
-export default HomePage;
+export default FormBuilderPage;
