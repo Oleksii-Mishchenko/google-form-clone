@@ -1,16 +1,32 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+
+import type { QuestionDraft } from '../types';
+
 import QuestionCard from '../components/form-builder/QuestionCard';
 import FormMeta from '../components/form-builder/FormMeta';
-import type { QuestionDraft } from '../types';
 import Button from '../components/ui/Button';
-import { Link } from 'react-router-dom';
 
 const FormBuilderPage = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [questions, setQuestions] = useState<QuestionDraft[]>([]);
 
+  const isQuestionValid = (q: QuestionDraft): boolean => {
+    if (!q.title.trim()) return false;
+
+    if (q.type === 'MULTIPLE_CHOICE' || q.type === 'CHECKBOX') {
+      return q.options.some((opt) => opt.trim() !== '');
+    }
+
+    return true;
+  };
+
   const handleAddQuestion = () => {
+    const hasInvalid = questions.some((q) => !isQuestionValid(q));
+
+    if (hasInvalid) return;
+
     const newQuestion: QuestionDraft = {
       id: crypto.randomUUID(),
       title: '',
@@ -21,6 +37,9 @@ const FormBuilderPage = () => {
 
     setQuestions((prev) => [...prev, newQuestion]);
   };
+
+  const canAddQuestion =
+    questions.length === 0 || questions.every(isQuestionValid);
 
   return (
     <div className="p-8 max-w-3xl mx-auto space-y-8">
@@ -37,7 +56,7 @@ const FormBuilderPage = () => {
         </p>
       </div>
 
-      <form className="space-y-6">
+      <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
         <FormMeta
           title={title}
           description={description}
@@ -50,10 +69,12 @@ const FormBuilderPage = () => {
             {questions.length} question{questions.length !== 1 && 's'}
           </div>
 
-          {questions.map((q) => (
+          {questions.map((q, i) => (
             <QuestionCard
               key={q.id}
               question={q}
+              index={i}
+              isValid={isQuestionValid(q)}
               onChange={(updated) =>
                 setQuestions((prev) =>
                   prev.map((question) =>
@@ -61,12 +82,22 @@ const FormBuilderPage = () => {
                   ),
                 )
               }
+              onDelete={() =>
+                setQuestions((prev) =>
+                  prev.filter((question) => question.id !== q.id),
+                )
+              }
             />
           ))}
         </div>
 
         <div className="flex gap-4">
-          <Button type="button" variant="secondary" onClick={handleAddQuestion}>
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={!canAddQuestion}
+            onClick={handleAddQuestion}
+          >
             Add Question
           </Button>
 

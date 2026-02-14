@@ -25,6 +25,7 @@ const OptionsEditor = ({ options, onChange }: Props) => {
           />
 
           <Button
+            type="button"
             className="px-3"
             variant="danger"
             onClick={() => onChange(options.filter((_, i) => i !== index))}

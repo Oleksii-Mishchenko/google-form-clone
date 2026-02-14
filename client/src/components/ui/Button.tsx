@@ -4,8 +4,11 @@ type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: Variant;
 };
 
-const base =
-  'px-4 py-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary';
+const base = `
+  px-4 py-2 rounded-lg transition-colors
+  focus:outline-none focus:ring-2 focus:ring-primary
+  disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none
+`;
 
 const variants: Record<Variant, string> = {
   primary: 'bg-primary hover:bg-primary-hover text-white shadow-md',
