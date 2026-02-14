@@ -26,11 +26,13 @@ const graphqlBaseQuery =
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: graphqlBaseQuery(),
+  tagTypes: ['Forms'],
   endpoints: (builder) => ({
     getForms: builder.query<
       { forms: { id: string; title: string; description?: string }[] },
       void
     >({
+      providesTags: ['Forms'],
       query: () => ({
         document: `
           query {
@@ -81,7 +83,41 @@ export const api = createApi({
         variables: { id },
       }),
     }),
+
+    createForm: builder.mutation<
+      { createForm: { id: string } },
+      {
+        title: string;
+        description?: string;
+        questions: {
+          title: string;
+          type: string;
+          options?: string[];
+          required: boolean;
+        }[];
+      }
+    >({
+      query: (variables) => ({
+        document: `
+          mutation CreateForm(
+            $title: String!
+            $description: String
+            $questions: [QuestionInput!]!
+          ) {
+            createForm(
+              title: $title
+              description: $description
+              questions: $questions
+            ) {
+              id
+            }
+          }
+        `,
+        variables,
+      }),
+      invalidatesTags: ['Forms'],
+    }),
   }),
 });
 
-export const { useGetFormsQuery, useGetFormQuery } = api;
+export const { useGetFormsQuery, useGetFormQuery, useCreateFormMutation } = api;

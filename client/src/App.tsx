@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import FormBuilderPage from './pages/FormBuilderPage';
-// import FormFillPage from './pages/FormFillPage';
+import FormFillPage from './pages/FormFillPage';
+import NotFoundPage from './pages/NotFoundPage';
 // import FormResponsesPage from './pages/FormResponsesPage';
 
 function App() {
@@ -11,8 +12,9 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/forms/new" element={<FormBuilderPage />} />
-          {/* <Route path="/forms/:id/fill" element={<FormFillPage />} />
-          <Route path="/forms/:id/responses" element={<FormResponsesPage />} /> */}
+          <Route path="/forms/:id/fill" element={<FormFillPage />} />
+          {/* <Route path="/forms/:id/responses" element={<FormResponsesPage />} /> */}
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
     </div>
