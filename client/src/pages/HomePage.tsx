@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useGetFormsQuery } from '../app/api';
+import Button from '../components/ui/Button';
 
 const HomePage = () => {
   const { data, isLoading, error } = useGetFormsQuery();
@@ -17,11 +18,13 @@ const HomePage = () => {
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-semibold">Forms</h1>
 
-        <Link
-          to="/forms/new"
-          className="bg-primary hover:bg-primary-hover transition-colors text-white px-5 py-2.5 rounded-xl shadow-md"
-        >
-          Create New Form
+        <Link to="/forms/new">
+          <Button
+            type="button"
+            className="px-5 py-2.5 rounded-xl cursor-pointer"
+          >
+            Create New Form
+          </Button>
         </Link>
       </div>
 

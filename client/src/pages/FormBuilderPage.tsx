@@ -1,12 +1,9 @@
 import { useState } from 'react';
-
-type QuestionDraft = {
-  id: string;
-  title: string;
-  type: 'TEXT' | 'MULTIPLE_CHOICE' | 'CHECKBOX' | 'DATE';
-  options: string[];
-  required: boolean;
-};
+import QuestionCard from '../components/form-builder/QuestionCard';
+import FormMeta from '../components/form-builder/FormMeta';
+import type { QuestionDraft } from '../types';
+import Button from '../components/ui/Button';
+import { Link } from 'react-router-dom';
 
 const FormBuilderPage = () => {
   const [title, setTitle] = useState('');
@@ -26,105 +23,56 @@ const FormBuilderPage = () => {
   };
 
   return (
-    <div className="p-8 max-w-3xl mx-auto">
-      <form className="space-y-6">
-        <div className="bg-surface border border-border rounded-xl p-6 space-y-4">
-          <input
-            type="text"
-            placeholder="Form title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full bg-surface border border-border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-          />
+    <div className="p-8 max-w-3xl mx-auto space-y-8">
+      <Link to="/" className="inline-block">
+        <Button type="button" variant="ghost" className="cursor-pointer">
+          ← Back to Forms
+        </Button>
+      </Link>
 
-          <textarea
-            placeholder="Form description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full bg-surface border border-border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-          />
-        </div>
+      <div className="space-y-2">
+        <h1 className="text-3xl font-semibold">Create New Form</h1>
+        <p className="text-text-secondary">
+          Add questions and configure your form settings.
+        </p>
+      </div>
+
+      <form className="space-y-6">
+        <FormMeta
+          title={title}
+          description={description}
+          onTitleChange={setTitle}
+          onDescriptionChange={setDescription}
+        />
 
         <div className="space-y-4">
+          <div className="text-sm text-text-secondary">
+            {questions.length} question{questions.length !== 1 && 's'}
+          </div>
+
           {questions.map((q) => (
-            <div
+            <QuestionCard
               key={q.id}
-              className="bg-surface border border-border rounded-xl p-5 space-y-4"
-            >
-              <input
-                type="text"
-                placeholder="Question title"
-                value={q.title}
-                onChange={(e) =>
-                  setQuestions((prev) =>
-                    prev.map((question) =>
-                      question.id === q.id
-                        ? { ...question, title: e.target.value }
-                        : question,
-                    ),
-                  )
-                }
-                className="w-full bg-surface border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-
-              <select
-                value={q.type}
-                onChange={(e) =>
-                  setQuestions((prev) =>
-                    prev.map((question) =>
-                      question.id === q.id
-                        ? {
-                            ...question,
-                            type: e.target.value as QuestionDraft['type'],
-                          }
-                        : question,
-                    ),
-                  )
-                }
-                className="w-full bg-surface border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-              >
-                <option value="TEXT">Text</option>
-                <option value="DATE">Date</option>
-                <option value="MULTIPLE_CHOICE">Multiple Choice</option>
-                <option value="CHECKBOX">Checkbox</option>
-              </select>
-
-              <label className="flex items-center gap-2 text-sm text-text-secondary">
-                <input
-                  type="checkbox"
-                  checked={q.required}
-                  onChange={(e) =>
-                    setQuestions((prev) =>
-                      prev.map((question) =>
-                        question.id === q.id
-                          ? { ...question, required: e.target.checked }
-                          : question,
-                      ),
-                    )
-                  }
-                  className="accent-primary"
-                />
-                Required
-              </label>
-            </div>
+              question={q}
+              onChange={(updated) =>
+                setQuestions((prev) =>
+                  prev.map((question) =>
+                    question.id === q.id ? updated : question,
+                  ),
+                )
+              }
+            />
           ))}
         </div>
 
         <div className="flex gap-4">
-          <button
-            type="button"
-            onClick={handleAddQuestion}
-            className="bg-surface border border-border hover:bg-surface-hover transition-colors px-4 py-2 rounded-lg"
-          >
+          <Button type="button" variant="secondary" onClick={handleAddQuestion}>
             Add Question
-          </button>
+          </Button>
 
-          <button
-            type="submit"
-            className="bg-primary hover:bg-primary-hover transition-colors text-white px-6 py-2 rounded-lg shadow-md"
-          >
+          <Button className="px-6" type="submit">
             Save Form
-          </button>
+          </Button>
         </div>
       </form>
     </div>
