@@ -1,4 +1,4 @@
-import { useGetFormsQuery } from '../app/api';
+import { useGetFormsQuery, useDeleteFormMutation } from '../app/api';
 import { getErrorMessage } from '../utils/getErrorMessage';
 
 import Loader from '../components/ui/Loader';
@@ -9,6 +9,7 @@ import Header from '../components/home/Header';
 
 const HomePage = () => {
   const { data, isLoading, error } = useGetFormsQuery();
+  const [deleteForm] = useDeleteFormMutation();
 
   if (isLoading) return <Loader />;
 
@@ -36,6 +37,7 @@ const HomePage = () => {
               id={form.id}
               title={form.title}
               description={form.description}
+              onDelete={deleteForm}
             />
           ))}
         </section>

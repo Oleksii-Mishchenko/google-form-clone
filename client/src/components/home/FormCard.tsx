@@ -6,9 +6,10 @@ type Props = {
   id: string;
   title: string;
   description?: string | null;
+  onDelete: (id: string) => void;
 };
 
-const FormCard = ({ id, title, description }: Props) => (
+const FormCard = ({ id, title, description, onDelete }: Props) => (
   <article className="bg-surface border border-border rounded-xl p-5 flex justify-between items-center hover:bg-surface-hover transition-colors">
     <div>
       <h2 className="text-lg font-medium">{title}</h2>
@@ -30,6 +31,15 @@ const FormCard = ({ id, title, description }: Props) => (
           Responses
         </Button>
       </Link>
+
+      <Button
+        variant="danger"
+        type="button"
+        className="cursor-pointer"
+        onClick={() => onDelete(id)}
+      >
+        Delete
+      </Button>
     </div>
   </article>
 );

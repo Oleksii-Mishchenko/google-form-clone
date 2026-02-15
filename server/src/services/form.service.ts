@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { forms } from '../store/db';
+import { forms, responses } from '../store/db';
 import { Form, Question, CreateFormInput } from '../types';
 
 export const createFormService = (input: CreateFormInput): Form => {
@@ -49,3 +49,22 @@ export const createFormService = (input: CreateFormInput): Form => {
 
   return newForm;
 };
+
+export const deleteFormService = (id: string): boolean => {
+  const formIndex = forms.findIndex((f) => f.id === id);
+
+  if (formIndex === -1) {
+    throw new Error('Form not found');
+  }
+
+  forms.splice(formIndex, 1);
+
+  for (let i = responses.length - 1; i >= 0; i--) {
+    if (responses[i].formId === id) {
+      responses.splice(i, 1);
+    }
+  }
+
+  return true;
+};
+

@@ -61,5 +61,7 @@ export const typeDefs = `
       formId: ID!
       answers: [AnswerInput!]!
     ): Response!
+
+    deleteForm(id: ID!): Boolean!
   }
 `;

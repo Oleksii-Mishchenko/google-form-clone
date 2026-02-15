@@ -163,6 +163,21 @@ export const api = createApi({
       invalidatesTags: ['Forms'],
     }),
 
+    deleteForm: builder.mutation<
+      { deleteForm: boolean },
+      string
+    >({
+      query: (id) => ({
+        document: `
+          mutation DeleteForm($id: ID!) {
+            deleteForm(id: $id)
+          }
+        `,
+        variables: { id },
+      }),
+      invalidatesTags: ['Forms'],
+    }),
+
     submitResponse: builder.mutation<
       { submitResponse: { id: string } },
       { formId: string; answers: { questionId: string; value: string[] }[] }
@@ -189,5 +204,6 @@ export const {
   useGetFormQuery,
   useGetResponsesQuery,
   useCreateFormMutation,
+  useDeleteFormMutation,
   useSubmitResponseMutation,
 } = api;

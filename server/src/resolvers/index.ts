@@ -1,4 +1,4 @@
-import { createFormService } from '../services/form.service';
+import { createFormService, deleteFormService } from '../services/form.service';
 import { submitResponseService } from '../services/response.service';
 import { forms, responses } from '../store/db';
 import { SubmitResponseInput, CreateFormInput } from '../types';
@@ -19,6 +19,10 @@ export const resolvers = {
 
     submitResponse: (_: unknown, args: SubmitResponseInput) => {
       return submitResponseService(args);
+    },
+
+    deleteForm: (_: unknown, args: { id: string }) => {
+      return deleteFormService(args.id);
     },
   },
 };
