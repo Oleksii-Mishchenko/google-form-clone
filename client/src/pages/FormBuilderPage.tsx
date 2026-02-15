@@ -1,5 +1,14 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+import {
+  setTitle,
+  setDescription,
+  addQuestion,
+  updateQuestion,
+  deleteQuestion,
+  resetFormBuilder,
+} from '../features/formBuilder/formBuilderSlice';
 
 import type { QuestionDraft } from '../types';
 import { useCreateFormMutation } from '../app/api';
@@ -10,10 +19,12 @@ import Button from '../components/ui/Button';
 import Header from '../components/form-builder/Header';
 
 const FormBuilderPage = () => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [questions, setQuestions] = useState<QuestionDraft[]>([]);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const { title, description, questions } = useAppSelector(
+    (state) => state.formBuilder,
+  );
 
   const [createForm, { isLoading }] = useCreateFormMutation();
 
@@ -29,7 +40,6 @@ const FormBuilderPage = () => {
 
   const handleAddQuestion = () => {
     const hasInvalid = questions.some((q) => !isQuestionValid(q));
-
     if (hasInvalid) return;
 
     const newQuestion: QuestionDraft = {
@@ -40,70 +50,10 @@ const FormBuilderPage = () => {
       required: false,
     };
 
-    setQuestions((prev) => [...prev, newQuestion]);
+    dispatch(addQuestion(newQuestion));
   };
 
-  const handleChangeQuestion = (updated: QuestionDraft, id: string) => {
-    setQuestions((prev) =>
-      prev.map((question) => (question.id === id ? updated : question)),
-    );
-  };
-
-  const handleDeleteQuestion = (id: string) => {
-    setQuestions((prev) => prev.filter((question) => question.id !== id));
-  };
-
-  const canAddQuestion =
-    questions.length === 0 || questions.every(isQuestionValid);
-
-  return (
-    <div className="p-8 max-w-3xl mx-auto space-y-8">
-      <Header />
-
-      <form className="space-y-6" onSubmit={handleSubmit}>
-        <FormMeta
-          title={title}
-          description={description}
-          onTitleChange={setTitle}
-          onDescriptionChange={setDescription}
-        />
-
-        <section className="space-y-4">
-          <div className="text-sm text-text-secondary">
-            {questions.length} question{questions.length !== 1 && 's'}
-          </div>
-
-          {questions.map((q, i) => (
-            <QuestionCard
-              key={q.id}
-              question={q}
-              index={i}
-              isValid={isQuestionValid(q)}
-              onChange={(updated) => handleChangeQuestion(updated, q.id)}
-              onDelete={() => handleDeleteQuestion(q.id)}
-            />
-          ))}
-        </section>
-
-        <div className="flex gap-4">
-          <Button
-            type="button"
-            variant="secondary"
-            disabled={!canAddQuestion}
-            onClick={handleAddQuestion}
-          >
-            Add Question
-          </Button>
-
-          <Button type="submit" className="px-6" disabled={isLoading}>
-            {isLoading ? 'Creating...' : 'Save Form'}
-          </Button>
-        </div>
-      </form>
-    </div>
-  );
-
-  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!title.trim()) return;
@@ -126,11 +76,64 @@ const FormBuilderPage = () => {
         questions: formattedQuestions,
       }).unwrap();
 
+      dispatch(resetFormBuilder());
       navigate('/');
     } catch (error) {
       console.error(error);
     }
-  }
+  };
+
+  const canAddQuestion =
+    questions.length === 0 || questions.every(isQuestionValid);
+
+  return (
+    <div className="p-8 max-w-3xl mx-auto space-y-8">
+      <Header />
+
+      <form className="space-y-6" onSubmit={handleSubmit}>
+        <FormMeta
+          title={title}
+          description={description}
+          onTitleChange={(value) => dispatch(setTitle(value))}
+          onDescriptionChange={(value) => dispatch(setDescription(value))}
+        />
+
+        <section className="space-y-4">
+          <div className="text-sm text-text-secondary">
+            {questions.length} question{questions.length !== 1 && 's'}
+          </div>
+
+          {questions.map((q, i) => (
+            <QuestionCard
+              key={q.id}
+              question={q}
+              index={i}
+              isValid={isQuestionValid(q)}
+              onChange={(updated) =>
+                dispatch(updateQuestion({ id: q.id, question: updated }))
+              }
+              onDelete={() => dispatch(deleteQuestion(q.id))}
+            />
+          ))}
+        </section>
+
+        <div className="flex gap-4">
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={!canAddQuestion}
+            onClick={handleAddQuestion}
+          >
+            Add Question
+          </Button>
+
+          <Button type="submit" className="px-6" disabled={isLoading}>
+            {isLoading ? 'Creating...' : 'Save Form'}
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
 };
 
 export default FormBuilderPage;
