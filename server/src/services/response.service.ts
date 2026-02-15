@@ -1,13 +1,6 @@
 import { randomUUID } from 'node:crypto';
-import { responses, forms, Answer, Response, Question } from '../store/db';
-
-interface SubmitResponseInput {
-  formId: string;
-  answers: {
-    questionId: string;
-    value: string[];
-  }[];
-}
+import { forms, responses } from '../store/db';
+import { Answer, Response, Question, SubmitResponseInput } from '../types';
 
 const normalizeValues = (values: string[], questionTitle: string): string[] => {
   const trimmed = values.map((v) => v.trim());

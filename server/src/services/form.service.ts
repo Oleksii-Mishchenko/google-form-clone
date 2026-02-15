@@ -1,16 +1,6 @@
 import { randomUUID } from 'node:crypto';
-import { forms, Form, Question } from '../store/db';
-
-interface CreateFormInput {
-  title: string;
-  description?: string;
-  questions: {
-    title: string;
-    type: Question['type'];
-    options?: string[];
-    required: boolean;
-  }[];
-}
+import { forms } from '../store/db';
+import { Form, Question, CreateFormInput } from '../types';
 
 export const createFormService = (input: CreateFormInput): Form => {
   const { title, description, questions } = input;
