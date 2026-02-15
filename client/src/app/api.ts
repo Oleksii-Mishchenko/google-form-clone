@@ -26,7 +26,7 @@ const graphqlBaseQuery =
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: graphqlBaseQuery(),
-  tagTypes: ['Forms'],
+  tagTypes: ['Forms', 'Responses'],
   endpoints: (builder) => ({
     getForms: builder.query<
       { forms: { id: string; title: string; description?: string }[] },
@@ -84,6 +84,36 @@ export const api = createApi({
       }),
     }),
 
+    getResponses: builder.query<
+      {
+        responses: {
+          id: string;
+          formId: string;
+          answers: { questionId: string; value: string[] }[];
+        }[];
+      },
+      string
+    >({
+      providesTags: (_result, _error, formId) => [
+        { type: 'Responses', id: formId },
+      ],
+      query: (formId) => ({
+        document: `
+          query GetResponses($formId: ID!) {
+            responses(formId: $formId) {
+              id
+              formId
+              answers {
+                questionId
+                value
+              }
+            }
+          }
+        `,
+        variables: { formId },
+      }),
+    }),
+
     createForm: builder.mutation<
       { createForm: { id: string } },
       {
@@ -122,6 +152,9 @@ export const api = createApi({
       { submitResponse: { id: string } },
       { formId: string; answers: { questionId: string; value: string[] }[] }
     >({
+      invalidatesTags: (_result, _error, { formId }) => [
+        { type: 'Responses', id: formId },
+      ],
       query: ({ formId, answers }) => ({
         document: `
           mutation SubmitResponse($formId: ID!, $answers: [AnswerInput!]!) {
@@ -139,6 +172,7 @@ export const api = createApi({
 export const {
   useGetFormsQuery,
   useGetFormQuery,
+  useGetResponsesQuery,
   useCreateFormMutation,
   useSubmitResponseMutation,
 } = api;

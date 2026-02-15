@@ -3,7 +3,7 @@ import HomePage from './pages/HomePage';
 import FormBuilderPage from './pages/FormBuilderPage';
 import FormFillPage from './pages/FormFillPage';
 import NotFoundPage from './pages/NotFoundPage';
-// import FormResponsesPage from './pages/FormResponsesPage';
+import FormResponsesPage from './pages/FormResponsesPage';
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/forms/new" element={<FormBuilderPage />} />
           <Route path="/forms/:id/fill" element={<FormFillPage />} />
-          {/* <Route path="/forms/:id/responses" element={<FormResponsesPage />} /> */}
+          <Route path="/forms/:id/responses" element={<FormResponsesPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
