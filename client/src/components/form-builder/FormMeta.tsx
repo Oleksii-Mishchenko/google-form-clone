@@ -13,23 +13,20 @@ const FormMeta = ({
   description,
   onTitleChange,
   onDescriptionChange,
-}: Props) => {
-  return (
-    <div className="bg-surface border border-border rounded-xl p-6 space-y-4">
-      <Input
-        type="text"
-        placeholder="Form title"
-        value={title}
-        onChange={(e) => onTitleChange(e.target.value)}
-      />
+}: Props) => (
+  <div className="bg-surface border border-border rounded-xl p-6 space-y-4">
+    <Input
+      placeholder="Form title"
+      value={title}
+      onChange={(e) => onTitleChange(e.target.value)}
+    />
 
-      <Textarea
-        placeholder="Form description"
-        value={description}
-        onChange={(e) => onDescriptionChange(e.target.value)}
-      />
-    </div>
-  );
-};
+    <Textarea
+      placeholder="Form description"
+      value={description}
+      onChange={(e) => onDescriptionChange(e.target.value)}
+    />
+  </div>
+);
 
 export default FormMeta;

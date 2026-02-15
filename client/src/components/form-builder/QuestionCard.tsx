@@ -1,6 +1,5 @@
 import type { QuestionDraft } from '../../types';
 import Button from '../ui/Button';
-import Checkbox from '../ui/Checkbox';
 import Input from '../ui/Input';
 import Select from '../ui/Select';
 import OptionsEditor from './OptionsEditor';
@@ -65,7 +64,7 @@ const QuestionCard = ({
       </Select>
 
       <label className="flex items-center gap-2 text-sm text-text-secondary">
-        <Checkbox
+        <Input
           type="checkbox"
           checked={question.required}
           onChange={(e) => {

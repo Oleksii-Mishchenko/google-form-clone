@@ -7,11 +7,8 @@ type Props = {
 };
 
 const OptionsEditor = ({ options, onChange }: Props) => {
-  const handleOptionChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number,
-  ): void => {
-    onChange(options.map((opt, i) => (i === index ? e.target.value : opt)));
+  const handleOptionChange = (value: string, index: number): void => {
+    onChange(options.map((opt, i) => (i === index ? value : opt)));
   };
 
   return (
@@ -19,9 +16,8 @@ const OptionsEditor = ({ options, onChange }: Props) => {
       {options.map((option, index) => (
         <div key={index} className="flex gap-2">
           <Input
-            type="text"
             value={option}
-            onChange={(e) => handleOptionChange(e, index)}
+            onChange={(e) => handleOptionChange(e.target.value, index)}
           />
 
           <Button

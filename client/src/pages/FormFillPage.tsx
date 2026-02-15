@@ -1,14 +1,17 @@
 import { useParams, Link } from 'react-router-dom';
 
 import { useGetFormQuery } from '../app/api';
+import { useFormAnswers } from '../hooks/useFormAnswers';
+
 import Button from '../components/ui/Button';
+import Input from '../components/ui/Input';
 
 const FormFillPage = () => {
   const { id } = useParams<{ id: string }>();
-
   const { data, isLoading, error } = useGetFormQuery(id!, {
     skip: !id,
   });
+  const { answers, updateAnswer } = useFormAnswers();
 
   if (isLoading) {
     return <div className="p-8">Loading...</div>;
@@ -56,7 +59,70 @@ const FormFillPage = () => {
               {q.required && <span className="text-danger ml-1">*</span>}
             </h3>
 
-            <div className="text-sm text-text-secondary">Type: {q.type}</div>
+            {q.type === 'TEXT' && (
+              <Input
+                value={answers[q.id]?.[0] || ''}
+                onChange={(e) => updateAnswer(q.id, [e.target.value])}
+              />
+            )}
+
+            {q.type === 'DATE' && (
+              <Input
+                type="date"
+                value={answers[q.id]?.[0] || ''}
+                onChange={(e) => updateAnswer(q.id, [e.target.value])}
+              />
+            )}
+
+            {q.type === 'MULTIPLE_CHOICE' && (
+              <div className="space-y-2">
+                {q.options?.map((option) => (
+                  <label
+                    key={option}
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
+                    <Input
+                      type="radio"
+                      name={q.id}
+                      value={option}
+                      checked={answers[q.id]?.[0] === option}
+                      onChange={() => updateAnswer(q.id, [option])}
+                    />
+                    <span>{option}</span>
+                  </label>
+                ))}
+              </div>
+            )}
+
+            {q.type === 'CHECKBOX' && (
+              <div className="space-y-2">
+                {q.options?.map((option) => {
+                  const selectedValues = answers[q.id] || [];
+                  const isChecked = selectedValues.includes(option);
+
+                  return (
+                    <label
+                      key={option}
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
+                      <Input
+                        type="checkbox"
+                        value={option}
+                        checked={isChecked}
+                        onChange={() =>
+                          updateAnswer(q.id, (prev) =>
+                            prev.includes(option)
+                              ? prev.filter((v) => v !== option)
+                              : [...prev, option],
+                          )
+                        }
+                      />
+                      <span>{option}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            )}
           </div>
         ))}
 
