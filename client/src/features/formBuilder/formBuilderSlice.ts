@@ -44,9 +44,7 @@ const formBuilderSlice = createSlice({
     },
 
     deleteQuestion(state, action: PayloadAction<string>) {
-      state.questions = state.questions.filter(
-        (q) => q.id !== action.payload,
-      );
+      state.questions = state.questions.filter((q) => q.id !== action.payload);
     },
 
     resetFormBuilder() {

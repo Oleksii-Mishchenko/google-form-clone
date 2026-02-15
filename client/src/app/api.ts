@@ -17,9 +17,24 @@ const graphqlBaseQuery =
       return { data: result };
     } catch (error) {
       if (error instanceof ClientError) {
-        return { error: error.response.errors };
+        return {
+          error: {
+            status: error.response.status,
+            data: {
+              errors: error.response.errors,
+            },
+          },
+        };
       }
-      return { error: 'Unknown error' };
+
+      return {
+        error: {
+          status: 500,
+          data: {
+            message: 'Unknown error occurred',
+          },
+        },
+      };
     }
   };
 
