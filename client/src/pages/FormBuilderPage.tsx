@@ -9,7 +9,6 @@ import {
   deleteQuestion,
   resetFormBuilder,
 } from '../features/formBuilder/formBuilderSlice';
-
 import type { QuestionDraft } from '../types';
 import { useCreateFormMutation } from '../app/api';
 
@@ -38,6 +37,12 @@ const FormBuilderPage = () => {
     return true;
   };
 
+  const isFormValid =
+  title.trim().length > 0 &&
+  questions.length > 0 &&
+  questions.every(isQuestionValid);
+
+
   const handleAddQuestion = () => {
     const hasInvalid = questions.some((q) => !isQuestionValid(q));
     if (hasInvalid) return;
@@ -51,36 +56,6 @@ const FormBuilderPage = () => {
     };
 
     dispatch(addQuestion(newQuestion));
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!title.trim()) return;
-    if (!questions.length) return;
-
-    const formattedQuestions = questions.map((q) => ({
-      title: q.title,
-      type: q.type,
-      options:
-        q.type === 'MULTIPLE_CHOICE' || q.type === 'CHECKBOX'
-          ? q.options.filter((opt) => opt.trim() !== '')
-          : undefined,
-      required: q.required,
-    }));
-
-    try {
-      await createForm({
-        title,
-        description,
-        questions: formattedQuestions,
-      }).unwrap();
-
-      dispatch(resetFormBuilder());
-      navigate('/');
-    } catch (error) {
-      console.error(error);
-    }
   };
 
   const canAddQuestion =
@@ -127,13 +102,40 @@ const FormBuilderPage = () => {
             Add Question
           </Button>
 
-          <Button type="submit" className="px-6" disabled={isLoading}>
+          <Button type="submit" className="px-6" disabled={isLoading || !isFormValid}>
             {isLoading ? 'Creating...' : 'Save Form'}
           </Button>
         </div>
       </form>
     </div>
   );
+
+  async function handleSubmit (e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const formattedQuestions = questions.map((q) => ({
+      title: q.title,
+      type: q.type,
+      options:
+        q.type === 'MULTIPLE_CHOICE' || q.type === 'CHECKBOX'
+          ? q.options.filter((opt) => opt.trim() !== '')
+          : undefined,
+      required: q.required,
+    }));
+
+    try {
+      await createForm({
+        title,
+        description,
+        questions: formattedQuestions,
+      }).unwrap();
+
+      dispatch(resetFormBuilder());
+      navigate('/');
+    } catch (error) {
+      console.error(error);
+    }
+  };
 };
 
 export default FormBuilderPage;

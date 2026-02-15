@@ -1,25 +1,29 @@
 import type { Form } from '../../types';
+import { getErrorMessage } from '../../utils/getErrorMessage';
 
 import Button from '../ui/Button';
+import ErrorMessage from '../ui/ErrorMessage';
 import Input from '../ui/Input';
 
 type Props = {
   form: Form;
   answers: Record<string, string[]>;
+  isSubmitting: boolean;
+  submitError: unknown;
+  onSubmit: (e: React.SubmitEvent<HTMLFormElement>) => void;
   updateAnswer: (
     questionId: string,
     value: string[] | ((prev: string[]) => string[]),
   ) => void;
-  isSubmitting: boolean;
-  onSubmit: (e: React.SubmitEvent<HTMLFormElement>) => void;
 };
 
 const FormContent = ({
   form,
   answers,
-  updateAnswer,
   isSubmitting,
+  submitError,
   onSubmit,
+  updateAnswer,
 }: Props) => (
   <form onSubmit={onSubmit} className="space-y-6">
     {form.questions.map((q, index) => (
@@ -101,6 +105,7 @@ const FormContent = ({
     <Button type="submit" disabled={isSubmitting}>
       Submit
     </Button>
+    {!!submitError && <ErrorMessage message={getErrorMessage(submitError)} />}
   </form>
 );
 

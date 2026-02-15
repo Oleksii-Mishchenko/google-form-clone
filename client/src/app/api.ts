@@ -163,10 +163,7 @@ export const api = createApi({
       invalidatesTags: ['Forms'],
     }),
 
-    deleteForm: builder.mutation<
-      { deleteForm: boolean },
-      string
-    >({
+    deleteForm: builder.mutation<{ deleteForm: boolean }, string>({
       query: (id) => ({
         document: `
           mutation DeleteForm($id: ID!) {

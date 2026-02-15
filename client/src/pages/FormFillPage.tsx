@@ -30,12 +30,10 @@ const FormFillPage = () => {
 
   if (isFormLoading || isSubmitting) return <Loader />;
 
-  if (fetchError || submitError) {
-    const combinedError = fetchError || submitError;
-
+  if (fetchError) {
     return (
       <ErrorMessage
-        message={getErrorMessage(combinedError)}
+        message={getErrorMessage(fetchError)}
         backTo="/"
         backLabel="← Back to forms"
       />
@@ -64,6 +62,7 @@ const FormFillPage = () => {
         answers={answers}
         updateAnswer={updateAnswer}
         isSubmitting={isSubmitting}
+        submitError={submitError}
         onSubmit={handleSubmit}
       />
     </div>
