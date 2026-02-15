@@ -12,6 +12,7 @@ import FormContent from '../components/form-fill/FormContent';
 
 const FormFillPage = () => {
   const { id } = useParams<{ id: string }>();
+
   const {
     data,
     isLoading: isFormLoading,
@@ -19,33 +20,13 @@ const FormFillPage = () => {
   } = useGetFormQuery(id!, {
     skip: !id,
   });
-  const { answers, updateAnswer } = useFormAnswers();
+
   const [
     submitResponse,
     { isLoading: isSubmitting, isSuccess, error: submitError },
   ] = useSubmitResponseMutation();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!id) return;
-
-    const formattedAnswers = Object.entries(answers).map(
-      ([questionId, value]) => ({
-        questionId,
-        value,
-      }),
-    );
-
-    try {
-      await submitResponse({
-        formId: id,
-        answers: formattedAnswers,
-      }).unwrap();
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const { answers, updateAnswer } = useFormAnswers();
 
   if (isFormLoading || isSubmitting) return <Loader />;
 
@@ -87,6 +68,28 @@ const FormFillPage = () => {
       />
     </div>
   );
+
+  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    if (!id) return;
+
+    const formattedAnswers = Object.entries(answers).map(
+      ([questionId, value]) => ({
+        questionId,
+        value,
+      }),
+    );
+
+    try {
+      await submitResponse({
+        formId: id,
+        answers: formattedAnswers,
+      }).unwrap();
+    } catch (error) {
+      console.error(error);
+    }
+  }
 };
 
 export default FormFillPage;

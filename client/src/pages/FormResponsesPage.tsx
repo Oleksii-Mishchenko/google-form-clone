@@ -1,11 +1,12 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { useGetFormQuery, useGetResponsesQuery } from '../app/api';
 import { getErrorMessage } from '../utils/getErrorMessage';
 
-import Button from '../components/ui/Button';
 import Loader from '../components/ui/Loader';
 import ErrorMessage from '../components/ui/ErrorMessage';
+import Header from '../components/form-responses/Header';
+import ResponseCard from '../components/form-responses/ResponseCard';
 
 const FormResponsesPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -53,17 +54,7 @@ const FormResponsesPage = () => {
 
   return (
     <div className="p-8 max-w-4xl mx-auto space-y-8">
-      <Link className="inline-block" to="/">
-        <Button variant="ghost">← Back to Forms</Button>
-      </Link>
-
-      <div>
-        <h1 className="text-3xl font-semibold">Responses: {form.title}</h1>
-        <p className="text-text-secondary">
-          {responses.length} response
-          {responses.length !== 1 && 's'}
-        </p>
-      </div>
+      <Header title={form.title} totalResponses={responses.length} />
 
       {responses.length === 0 && (
         <div className="bg-surface border border-border rounded-xl p-6 text-text-secondary">
@@ -71,31 +62,16 @@ const FormResponsesPage = () => {
         </div>
       )}
 
-      <div className="space-y-6">
+      <section className="space-y-6">
         {responses.map((response, index) => (
-          <div
+          <ResponseCard
             key={response.id}
-            className="bg-surface border border-border rounded-xl p-6 space-y-4"
-          >
-            <h3 className="font-medium">Response #{index + 1}</h3>
-
-            {response.answers.map((answer) => {
-              const question = form.questions.find(
-                (q) => q.id === answer.questionId,
-              );
-
-              return (
-                <div key={answer.questionId}>
-                  <p className="text-sm text-text-secondary">
-                    {question?.title}
-                  </p>
-                  <p className="font-medium">{answer.value.join(', ')}</p>
-                </div>
-              );
-            })}
-          </div>
+            response={response}
+            form={form}
+            index={index}
+          />
         ))}
-      </div>
+      </section>
     </div>
   );
 };

@@ -29,7 +29,7 @@ const HomePage = () => {
       {forms.length === 0 ? (
         <EmptyState />
       ) : (
-        <div className="space-y-4">
+        <section className="space-y-4">
           {forms.map((form) => (
             <FormCard
               key={form.id}
@@ -38,7 +38,7 @@ const HomePage = () => {
               description={form.description}
             />
           ))}
-        </div>
+        </section>
       )}
     </div>
   );

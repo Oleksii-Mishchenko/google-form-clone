@@ -7,7 +7,7 @@ type Props = {
 };
 
 const Header = ({ hasForms }: Props) => (
-  <div className="flex justify-between items-center">
+  <header className="flex justify-between items-center">
     <h1 className="text-3xl font-semibold">Forms</h1>
 
     {hasForms && (
@@ -17,7 +17,7 @@ const Header = ({ hasForms }: Props) => (
         </Button>
       </Link>
     )}
-  </div>
+  </header>
 );
 
 export default Header;

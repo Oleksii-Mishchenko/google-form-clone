@@ -9,7 +9,7 @@ type Props = {
 };
 
 const FormCard = ({ id, title, description }: Props) => (
-  <div className="bg-surface border border-border rounded-xl p-5 flex justify-between items-center hover:bg-surface-hover transition-colors">
+  <article className="bg-surface border border-border rounded-xl p-5 flex justify-between items-center hover:bg-surface-hover transition-colors">
     <div>
       <h2 className="text-lg font-medium">{title}</h2>
 
@@ -31,7 +31,7 @@ const FormCard = ({ id, title, description }: Props) => (
         </Button>
       </Link>
     </div>
-  </div>
+  </article>
 );
 
 export default FormCard;

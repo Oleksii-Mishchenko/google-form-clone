@@ -18,3 +18,12 @@ export type Form = {
     required: boolean;
   }[];
 };
+
+export type Response = {
+  id: string;
+  formId: string;
+  answers: {
+    questionId: string;
+    value: string[];
+  }[];
+};

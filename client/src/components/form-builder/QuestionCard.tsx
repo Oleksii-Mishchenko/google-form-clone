@@ -30,7 +30,7 @@ const QuestionCard = ({
     question.type === 'MULTIPLE_CHOICE' || question.type === 'CHECKBOX';
 
   return (
-    <div className="bg-surface border border-border rounded-xl p-5 space-y-4">
+    <article className="bg-surface border border-border rounded-xl p-5 space-y-4">
       <div className="flex justify-between items-center">
         <h3 className="text-sm font-medium text-text-secondary">
           Question {index + 1}
@@ -80,7 +80,7 @@ const QuestionCard = ({
           onChange={(newOptions) => updateField('options', newOptions)}
         />
       )}
-    </div>
+    </article>
   );
 };
 

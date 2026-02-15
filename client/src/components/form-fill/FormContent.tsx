@@ -11,7 +11,7 @@ type Props = {
     value: string[] | ((prev: string[]) => string[]),
   ) => void;
   isSubmitting: boolean;
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  onSubmit: (e: React.SubmitEvent<HTMLFormElement>) => void;
 };
 
 const FormContent = ({
