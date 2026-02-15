@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useGetFormQuery, useGetResponsesQuery } from '../app/api';
 
 import Button from '../components/ui/Button';
+import Loader from '../components/ui/Loader';
 
 const FormResponsesPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,9 +15,7 @@ const FormResponsesPage = () => {
   const { data: responsesData, isLoading: isResponsesLoading } =
     useGetResponsesQuery(id!, { skip: !id });
 
-  if (isFormLoading || isResponsesLoading) {
-    return <div className="p-8">Loading...</div>;
-  }
+  if (isFormLoading || isResponsesLoading) return <Loader />
 
   if (!formData?.form) {
     return (
@@ -34,7 +33,7 @@ const FormResponsesPage = () => {
 
   return (
     <div className="p-8 max-w-4xl mx-auto space-y-8">
-      <Link to="/">
+      <Link className="inline-block" to="/">
         <Button variant="ghost">← Back to Forms</Button>
       </Link>
 

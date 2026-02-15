@@ -5,6 +5,7 @@ import { useFormAnswers } from '../hooks/useFormAnswers';
 
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
+import Loader from '../components/ui/Loader';
 
 const FormFillPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -19,13 +20,7 @@ const FormFillPage = () => {
   const [submitResponse, { isLoading: isSubmitting, isSuccess }] =
     useSubmitResponseMutation();
 
-  if (isFormLoading) {
-    return <div className="p-8">Loading...</div>;
-  }
-
-  if (isSubmitting) {
-    return <div className="p-8">Submitting...</div>;
-  }
+  if (isFormLoading || isSubmitting) return <Loader />;
 
   if (error || !data?.form) {
     return (

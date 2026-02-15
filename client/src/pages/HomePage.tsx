@@ -2,13 +2,12 @@ import { Link } from 'react-router-dom';
 
 import { useGetFormsQuery } from '../app/api';
 import Button from '../components/ui/Button';
+import Loader from '../components/ui/Loader';
 
 const HomePage = () => {
   const { data, isLoading, error } = useGetFormsQuery();
 
-  if (isLoading) {
-    return <div className="p-8 text-text-secondary">Loading...</div>;
-  }
+  if (isLoading) return <Loader />;
 
   if (error) {
     return <div className="p-8 text-danger">Error loading forms</div>;
