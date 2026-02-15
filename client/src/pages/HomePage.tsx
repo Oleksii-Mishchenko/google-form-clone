@@ -1,17 +1,18 @@
 import { Link } from 'react-router-dom';
 
 import { useGetFormsQuery } from '../app/api';
+import { getErrorMessage } from '../utils/getErrorMessage';
+
 import Button from '../components/ui/Button';
 import Loader from '../components/ui/Loader';
+import ErrorMessage from '../components/ui/ErrorMessage';
 
 const HomePage = () => {
   const { data, isLoading, error } = useGetFormsQuery();
 
   if (isLoading) return <Loader />;
 
-  if (error) {
-    return <div className="p-8 text-danger">Error loading forms</div>;
-  }
+  if (error) return <ErrorMessage message={getErrorMessage(error)} />;
 
   return (
     <div className="p-8 max-w-4xl mx-auto space-y-6">

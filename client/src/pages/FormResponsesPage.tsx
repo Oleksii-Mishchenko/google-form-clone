@@ -1,30 +1,50 @@
 import { useParams, Link } from 'react-router-dom';
 
 import { useGetFormQuery, useGetResponsesQuery } from '../app/api';
+import { getErrorMessage } from '../utils/getErrorMessage';
 
 import Button from '../components/ui/Button';
 import Loader from '../components/ui/Loader';
+import ErrorMessage from '../components/ui/ErrorMessage';
 
 const FormResponsesPage = () => {
   const { id } = useParams<{ id: string }>();
 
-  const { data: formData, isLoading: isFormLoading } = useGetFormQuery(id!, {
+  const {
+    data: formData,
+    isLoading: isFormLoading,
+    error: formLoadingError,
+  } = useGetFormQuery(id!, {
     skip: !id,
   });
 
-  const { data: responsesData, isLoading: isResponsesLoading } =
-    useGetResponsesQuery(id!, { skip: !id });
+  const {
+    data: responsesData,
+    isLoading: isResponsesLoading,
+    error: responsesLoadingError,
+  } = useGetResponsesQuery(id!, { skip: !id });
 
-  if (isFormLoading || isResponsesLoading) return <Loader />
+  if (isFormLoading || isResponsesLoading) return <Loader />;
+
+  if (formLoadingError || responsesLoadingError) {
+    const combinedError = formLoadingError || responsesLoadingError;
+
+    return (
+      <ErrorMessage
+        message={getErrorMessage(combinedError)}
+        backTo="/"
+        backLabel="← Back to forms"
+      />
+    );
+  }
 
   if (!formData?.form) {
     return (
-      <div className="p-8 space-y-6">
-        <Link to="/">
-          <Button variant="ghost">← Back</Button>
-        </Link>
-        <p className="text-danger">Form not found</p>
-      </div>
+      <ErrorMessage
+        message="Form not found"
+        backTo="/"
+        backLabel="← Back to forms"
+      />
     );
   }
 
