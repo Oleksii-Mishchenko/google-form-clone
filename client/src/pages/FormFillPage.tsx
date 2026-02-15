@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 
-import { useGetFormQuery } from '../app/api';
+import { useGetFormQuery, useSubmitResponseMutation } from '../app/api';
 import { useFormAnswers } from '../hooks/useFormAnswers';
 
 import Button from '../components/ui/Button';
@@ -8,13 +8,23 @@ import Input from '../components/ui/Input';
 
 const FormFillPage = () => {
   const { id } = useParams<{ id: string }>();
-  const { data, isLoading, error } = useGetFormQuery(id!, {
+  const {
+    data,
+    isLoading: isFormLoading,
+    error,
+  } = useGetFormQuery(id!, {
     skip: !id,
   });
   const { answers, updateAnswer } = useFormAnswers();
+  const [submitResponse, { isLoading: isSubmitting, isSuccess }] =
+    useSubmitResponseMutation();
 
-  if (isLoading) {
+  if (isFormLoading) {
     return <div className="p-8">Loading...</div>;
+  }
+
+  if (isSubmitting) {
+    return <div className="p-8">Submitting...</div>;
   }
 
   if (error || !data?.form) {
@@ -33,6 +43,40 @@ const FormFillPage = () => {
 
   const { form } = data;
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!id) return;
+
+    const formattedAnswers = Object.entries(answers).map(
+      ([questionId, value]) => ({
+        questionId,
+        value,
+      }),
+    );
+
+    try {
+      await submitResponse({
+        formId: id,
+        answers: formattedAnswers,
+      }).unwrap();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  if (isSuccess) {
+    return (
+      <div className="p-8 max-w-3xl mx-auto space-y-6 text-center">
+        <h1 className="text-3xl font-semibold text-success">Thank you!</h1>
+        <p className="text-text-secondary">Your response has been submitted.</p>
+        <Link to="/">
+          <Button className="cursor-pointer">Back to Forms</Button>
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <div className="p-8 max-w-3xl mx-auto space-y-8">
       <Link to="/" className="inline-block">
@@ -48,7 +92,7 @@ const FormFillPage = () => {
         )}
       </div>
 
-      <form className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6">
         {form.questions.map((q, index) => (
           <div
             key={q.id}
@@ -126,8 +170,8 @@ const FormFillPage = () => {
           </div>
         ))}
 
-        <Button type="submit" disabled>
-          Submit (coming soon)
+        <Button type="submit" disabled={isSubmitting}>
+          Submit
         </Button>
       </form>
     </div>

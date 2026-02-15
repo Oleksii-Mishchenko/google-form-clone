@@ -117,7 +117,28 @@ export const api = createApi({
       }),
       invalidatesTags: ['Forms'],
     }),
+
+    submitResponse: builder.mutation<
+      { submitResponse: { id: string } },
+      { formId: string; answers: { questionId: string; value: string[] }[] }
+    >({
+      query: ({ formId, answers }) => ({
+        document: `
+          mutation SubmitResponse($formId: ID!, $answers: [AnswerInput!]!) {
+            submitResponse(formId: $formId, answers: $answers) {
+              id
+            }
+          }
+        `,
+        variables: { formId, answers },
+      }),
+    }),
   }),
 });
 
-export const { useGetFormsQuery, useGetFormQuery, useCreateFormMutation } = api;
+export const {
+  useGetFormsQuery,
+  useGetFormQuery,
+  useCreateFormMutation,
+  useSubmitResponseMutation,
+} = api;
