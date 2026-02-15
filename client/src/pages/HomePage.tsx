@@ -1,72 +1,45 @@
-import { Link } from 'react-router-dom';
-
 import { useGetFormsQuery } from '../app/api';
 import { getErrorMessage } from '../utils/getErrorMessage';
 
-import Button from '../components/ui/Button';
 import Loader from '../components/ui/Loader';
 import ErrorMessage from '../components/ui/ErrorMessage';
+import FormCard from '../components/home/FormCard';
+import EmptyState from '../components/home/EmptyState';
+import Header from '../components/home/Header';
 
 const HomePage = () => {
   const { data, isLoading, error } = useGetFormsQuery();
 
   if (isLoading) return <Loader />;
 
-  if (error) return <ErrorMessage message={getErrorMessage(error)} />;
+  if (error) {
+    return (
+      <div className="p-8 max-w-4xl mx-auto">
+        <ErrorMessage message={getErrorMessage(error)} />
+      </div>
+    );
+  }
+
+  const forms = data?.forms ?? [];
 
   return (
     <div className="p-8 max-w-4xl mx-auto space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-semibold">Forms</h1>
+      <Header hasForms={!!forms.length} />
 
-        <Link to="/forms/new">
-          <Button
-            type="button"
-            className="px-5 py-2.5 rounded-xl cursor-pointer"
-          >
-            Create New Form
-          </Button>
-        </Link>
-      </div>
-
-      <div className="space-y-4">
-        {data?.forms.length === 0 && (
-          <div className="text-text-secondary">No forms created yet.</div>
-        )}
-
-        {data?.forms.map((form) => (
-          <div
-            key={form.id}
-            className="bg-surface border border-border rounded-xl p-5 flex justify-between items-center hover:bg-surface-hover transition-colors"
-          >
-            <div>
-              <h2 className="text-lg font-medium">{form.title}</h2>
-
-              {form.description && (
-                <p className="text-sm text-text-secondary mt-1">
-                  {form.description}
-                </p>
-              )}
-            </div>
-
-            <div className="flex gap-4 text-sm">
-              <Link
-                to={`/forms/${form.id}/fill`}
-                className="text-primary hover:underline"
-              >
-                Fill
-              </Link>
-
-              <Link
-                to={`/forms/${form.id}/responses`}
-                className="text-success hover:underline"
-              >
-                Responses
-              </Link>
-            </div>
-          </div>
-        ))}
-      </div>
+      {forms.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <div className="space-y-4">
+          {forms.map((form) => (
+            <FormCard
+              key={form.id}
+              id={form.id}
+              title={form.title}
+              description={form.description}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
