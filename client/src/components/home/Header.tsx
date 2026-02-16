@@ -2,11 +2,11 @@ import { Link } from 'react-router-dom';
 
 import Button from '../ui/Button';
 
-type Props = {
+interface HeaderProps {
   hasForms: boolean;
-};
+}
 
-const Header = ({ hasForms }: Props) => (
+const Header = ({ hasForms }: HeaderProps) => (
   <header className="flex justify-between items-center">
     <h1 className="text-3xl font-semibold">Forms</h1>
 

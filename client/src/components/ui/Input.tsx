@@ -1,6 +1,6 @@
-import React from 'react';
+import type { InputHTMLAttributes } from 'react';
 
-type Props = React.InputHTMLAttributes<HTMLInputElement>;
+type InputProps = InputHTMLAttributes<HTMLInputElement>;
 
 const baseStyles = 'focus:outline-none focus:ring-2 focus:ring-primary';
 
@@ -9,7 +9,7 @@ const textStyles =
 
 const choiceStyles = 'accent-primary';
 
-const Input = ({ type = 'text', className = '', ...props }: Props) => {
+const Input = ({ type = 'text', className = '', ...props }: InputProps) => {
   const isChoice = type === 'checkbox' || type === 'radio';
 
   const styles = isChoice

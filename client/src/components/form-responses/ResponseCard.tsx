@@ -1,16 +1,13 @@
 import type { Form, Response } from '../../types';
 
-type Props = {
+interface ResponseCardProps {
   response: Response;
   form: Form;
   index: number;
-};
+}
 
-const ResponseCard = ({ response, form, index }: Props) => (
-  <article
-    key={response.id}
-    className="bg-surface border border-border rounded-xl p-6 space-y-4"
-  >
+const ResponseCard = ({ response, form, index }: ResponseCardProps) => (
+  <article className="bg-surface border border-border rounded-xl p-6 space-y-4">
     <h3 className="font-medium">Response #{index + 1}</h3>
 
     {response.answers.map((answer) => {

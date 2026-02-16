@@ -1,19 +1,19 @@
 import Input from '../ui/Input';
 import Textarea from '../ui/Textarea';
 
-type Props = {
+interface FormMetaProps {
   title: string;
   description: string;
   onTitleChange: (value: string) => void;
   onDescriptionChange: (value: string) => void;
-};
+}
 
 const FormMeta = ({
   title,
   description,
   onTitleChange,
   onDescriptionChange,
-}: Props) => (
+}: FormMetaProps) => (
   <div className="bg-surface border border-border rounded-xl p-6 space-y-4">
     <Input
       placeholder="Form title"

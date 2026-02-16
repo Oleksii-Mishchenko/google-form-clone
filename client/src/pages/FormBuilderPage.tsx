@@ -38,10 +38,9 @@ const FormBuilderPage = () => {
   };
 
   const isFormValid =
-  title.trim().length > 0 &&
-  questions.length > 0 &&
-  questions.every(isQuestionValid);
-
+    title.trim().length > 0 &&
+    questions.length > 0 &&
+    questions.every(isQuestionValid);
 
   const handleAddQuestion = () => {
     const hasInvalid = questions.some((q) => !isQuestionValid(q));
@@ -102,7 +101,11 @@ const FormBuilderPage = () => {
             Add Question
           </Button>
 
-          <Button type="submit" className="px-6" disabled={isLoading || !isFormValid}>
+          <Button
+            type="submit"
+            className="px-6"
+            disabled={isLoading || !isFormValid}
+          >
             {isLoading ? 'Creating...' : 'Save Form'}
           </Button>
         </div>
@@ -110,7 +113,7 @@ const FormBuilderPage = () => {
     </div>
   );
 
-  async function handleSubmit (e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const formattedQuestions = questions.map((q) => ({
@@ -135,7 +138,7 @@ const FormBuilderPage = () => {
     } catch (error) {
       console.error(error);
     }
-  };
+  }
 };
 
 export default FormBuilderPage;

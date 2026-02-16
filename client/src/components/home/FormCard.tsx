@@ -2,14 +2,14 @@ import { Link } from 'react-router-dom';
 
 import Button from '../ui/Button';
 
-type Props = {
+interface FormCardProps {
   id: string;
   title: string;
   description?: string | null;
   onDelete: (id: string) => void;
-};
+}
 
-const FormCard = ({ id, title, description, onDelete }: Props) => (
+const FormCard = ({ id, title, description, onDelete }: FormCardProps) => (
   <article className="bg-surface border border-border rounded-xl p-5 flex justify-between items-center hover:bg-surface-hover transition-colors">
     <div>
       <h2 className="text-lg font-medium">{title}</h2>

@@ -2,12 +2,12 @@ import { Link } from 'react-router-dom';
 
 import Button from '../ui/Button';
 
-type Props = {
+interface HeaderProps {
   title: string;
   description?: string;
-};
+}
 
-const Header = ({ title, description }: Props) => (
+const Header = ({ title, description }: HeaderProps) => (
   <header className="space-y-8">
     <Link to="/" className="inline-block">
       <Button type="button" variant="ghost" className="cursor-pointer">

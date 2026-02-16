@@ -1,8 +1,10 @@
+import type { ButtonHTMLAttributes } from 'react';
+
 type Variant = 'primary' | 'secondary' | 'danger' | 'ghost';
 
-type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
-};
+}
 
 const base = `
   px-4 py-2 rounded-lg transition-colors
@@ -17,7 +19,11 @@ const variants: Record<Variant, string> = {
   ghost: 'text-primary hover:underline bg-transparent px-0 py-0',
 };
 
-const Button = ({ variant = 'primary', className = '', ...props }: Props) => (
+const Button = ({
+  variant = 'primary',
+  className = '',
+  ...props
+}: ButtonProps) => (
   <button className={`${base} ${variants[variant]} ${className}`} {...props} />
 );
 

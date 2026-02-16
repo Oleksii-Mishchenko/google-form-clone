@@ -4,13 +4,13 @@ import Input from '../ui/Input';
 import Select from '../ui/Select';
 import OptionsEditor from './OptionsEditor';
 
-type Props = {
+interface QuestionCardProps {
   question: QuestionDraft;
   index: number;
   isValid: boolean;
   onChange: (updated: QuestionDraft) => void;
   onDelete: () => void;
-};
+}
 
 const QuestionCard = ({
   question,
@@ -18,7 +18,7 @@ const QuestionCard = ({
   isValid,
   onChange,
   onDelete,
-}: Props) => {
+}: QuestionCardProps) => {
   const updateField = <K extends keyof QuestionDraft>(
     key: K,
     value: QuestionDraft[K],

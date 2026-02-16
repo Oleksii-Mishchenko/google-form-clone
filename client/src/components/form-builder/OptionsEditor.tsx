@@ -1,12 +1,12 @@
 import Button from '../ui/Button';
 import Input from '../ui/Input';
 
-type Props = {
+interface OptionsEditorProps {
   options: string[];
   onChange: (options: string[]) => void;
-};
+}
 
-const OptionsEditor = ({ options, onChange }: Props) => {
+const OptionsEditor = ({ options, onChange }: OptionsEditorProps) => {
   const handleOptionChange = (value: string, index: number): void => {
     onChange(options.map((opt, i) => (i === index ? value : opt)));
   };

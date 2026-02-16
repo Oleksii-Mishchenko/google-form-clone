@@ -5,7 +5,7 @@ import Button from '../ui/Button';
 import ErrorMessage from '../ui/ErrorMessage';
 import Input from '../ui/Input';
 
-type Props = {
+interface FormContentProps {
   form: Form;
   answers: Record<string, string[]>;
   isSubmitting: boolean;
@@ -15,7 +15,7 @@ type Props = {
     questionId: string,
     value: string[] | ((prev: string[]) => string[]),
   ) => void;
-};
+}
 
 const FormContent = ({
   form,
@@ -24,7 +24,7 @@ const FormContent = ({
   submitError,
   onSubmit,
   updateAnswer,
-}: Props) => (
+}: FormContentProps) => (
   <form onSubmit={onSubmit} className="space-y-6">
     {form.questions.map((q, index) => (
       <div
